@@ -20,6 +20,7 @@ use_cuda = torch.cuda.is_available() if use_cuda else False
 n_iterations = 1000
 learning_rate = 0.001
 dropout = False
+softmax = False
 
 # Training dataset loader
 training_dataset = dataset.SharedTaskDataset('./data/cwi-train-cx-1.csv', train=True)
@@ -33,20 +34,27 @@ testloader = DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=
 classes = ('non-complex', 'complex')
 
 # CNN classifier
-cnn_classifier = modules.CNNClassifier(dropout=dropout)
+cnn_classifier = modules.CNNClassifier(dropout=dropout, softmax=softmax)
 if use_cuda: cnn_classifier.cuda()
 
 # SGD optimizer
 optimizer = optim.SGD(cnn_classifier.parameters(), lr=learning_rate, momentum=0.9)
 
 # Objective function
-criterion = nn.CrossEntropyLoss()
+if softmax:
+    criterion = nn.NLLLoss()
+else:
+    criterion = nn.CrossEntropyLoss()
+# end if
 
 # Losses and accuracies
 train_losses = torch.zeros(n_iterations)
 train_accuracies = torch.zeros(n_iterations)
 test_losses = torch.zeros(n_iterations)
 test_accuracies = torch.zeros(n_iterations)
+
+# Max test accuracy
+max_test_accuracy = 0.0
 
 # For each iteration
 for epoch in range(n_iterations):
@@ -128,7 +136,12 @@ for epoch in range(n_iterations):
     print(u"Test Epoch {} Loss : {} Accuracy : {}".format(epoch, float(loss.data), success / total))
     test_losses[epoch] = float(loss.data)
     test_accuracies[epoch] = success / total
+    if (success / total) > max_test_accuracy:
+        max_test_accuracy = success / total
+    # end if
 # end for
+
+print(u"Best : {}".format(max_test_accuracy))
 
 # Show losses
 plt.plot(train_losses.numpy(), c='b')
