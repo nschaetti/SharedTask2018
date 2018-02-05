@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 # Meta-parameters
 n_iterations = 1000
 learning_rate = 0.001
+dropout = False
 
 # Training dataset loader
 training_dataset = dataset.SharedTaskDataset('./data/cwi-train-cx-1.csv', train=True)
@@ -28,7 +29,7 @@ testloader = DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=
 classes = ('non-complex', 'complex')
 
 # CNN classifier
-cnn_classifier = modules.CNNClassifier()
+cnn_classifier = modules.CNNClassifier(dropout=dropout)
 cnn_classifier.cuda()
 
 # SGD optimizer

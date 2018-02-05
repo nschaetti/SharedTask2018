@@ -15,11 +15,14 @@ class CNNClassifier(nn.Module):
     """
 
     # Constructor
-    def __init__(self):
+    def __init__(self, dropout=False):
         """
         Constructor
         """
         super(CNNClassifier, self).__init__()
+
+        # Properties
+        self.dropout = dropout
 
         # First 1-D convolution layer
         self.conv1_lexical = nn.Conv1d(1, 10, 10)
@@ -82,6 +85,14 @@ class CNNClassifier(nn.Module):
         xt = xt.view(-1, 5 * 4)
         xb = xb.view(-1, 5 * 3)
         xs = xs.view(-1, 5 * 135)
+
+        # If dropout
+        if self.dropout:
+            xl = F.dropout(xl, self.training)
+            xt = F.dropout(xt, self.training)
+            xb = F.dropout(xb, self.training)
+            xs = F.dropout(xs, self.training)
+        # end if
 
         # Joined
         xj = torch.cat((xl, xt, xb, xs), dim=1)
