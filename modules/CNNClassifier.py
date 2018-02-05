@@ -15,7 +15,7 @@ class CNNClassifier(nn.Module):
     """
 
     # Constructor
-    def __init__(self, dropout=False):
+    def __init__(self, dropout=False, softmax=False):
         """
         Constructor
         """
@@ -23,6 +23,7 @@ class CNNClassifier(nn.Module):
 
         # Properties
         self.dropout = dropout
+        self.softmax = softmax
 
         # First 1-D convolution layer
         self.conv1_lexical = nn.Conv1d(1, 10, 10)
@@ -103,7 +104,11 @@ class CNNClassifier(nn.Module):
         # Second linear layer
         xj = F.relu(self.linear_layer2(xj))
 
-        return xj
+        if self.softmax:
+            return F.log_softmax(x)
+        else:
+            return xj
+        # end if
     # end forward
 
 # end CNNClassifier
