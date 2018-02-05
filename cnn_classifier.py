@@ -12,6 +12,10 @@ import dataset
 import modules
 import matplotlib.pyplot as plt
 
+# CUDA?
+use_cuda = True
+use_cuda = torch.cuda.is_available() if use_cuda else False
+
 # Meta-parameters
 n_iterations = 1000
 learning_rate = 0.001
@@ -30,7 +34,7 @@ classes = ('non-complex', 'complex')
 
 # CNN classifier
 cnn_classifier = modules.CNNClassifier(dropout=dropout)
-cnn_classifier.cuda()
+if use_cuda: cnn_classifier.cuda()
 
 # SGD optimizer
 optimizer = optim.SGD(cnn_classifier.parameters(), lr=learning_rate, momentum=0.9)
@@ -56,7 +60,11 @@ for epoch in range(n_iterations):
         inputs, labels = data
 
         # To variable
-        inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
+        if use_cuda:
+            inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
+        else:
+            inputs, labels = Variable(inputs), Variable(labels)
+        # end if
 
         # Gradients to zero
         optimizer.zero_grad()
@@ -96,7 +104,11 @@ for epoch in range(n_iterations):
         inputs, labels = data
 
         # To variable
-        inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
+        if use_cuda:
+            inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
+        else:
+            inputs, labels = Variable(inputs), Variable(labels)
+        # end if
 
         # Forward
         outputs = cnn_classifier(inputs)
