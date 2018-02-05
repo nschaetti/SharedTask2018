@@ -42,7 +42,7 @@ scores = cross_val_score(dt_clf, X, Y)
 print(u"Average decision tree test accuracy : {}".format(scores.mean()))
 
 # Random forest
-rf_clf = RandomForestClassifier(n_estimators=100, max_depth=None)
+rf_clf = RandomForestClassifier(n_estimators=200, max_depth=None)
 
 # Test
 print(u"Testing random forest")
@@ -50,7 +50,7 @@ scores = cross_val_score(rf_clf, X, Y)
 print(u"Average random forest accuracy : {}".format(scores.mean()))
 
 # Extra trees classifier
-et_clf = ExtraTreesClassifier(n_estimators=100, max_depth=None)
+et_clf = ExtraTreesClassifier(n_estimators=200, max_depth=None)
 
 # Test
 print(u"Testing extra trees")
@@ -58,7 +58,7 @@ scores = cross_val_score(et_clf, X, Y)
 print(u"Average extra trees classifier : {}".format(scores.mean()))
 
 # AdaBoost classifier
-ada_clf = AdaBoostClassifier(n_estimators=100)
+ada_clf = AdaBoostClassifier(n_estimators=50)
 
 # Test
 print(u"Testing AdaBoost")
@@ -66,7 +66,7 @@ scores = cross_val_score(ada_clf, X, Y)
 print(u"Average AdaBoost accuracy : {}".format(scores.mean()))
 
 # Gradient Tree boosting
-gb_clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0)
+gb_clf = GradientBoostingClassifier(n_estimators=50, learning_rate=1.0)
 
 # Test
 print(u"Testing gradient boosting")
