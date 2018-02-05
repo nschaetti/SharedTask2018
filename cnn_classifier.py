@@ -17,7 +17,7 @@ use_cuda = True
 use_cuda = torch.cuda.is_available() if use_cuda else False
 
 # Meta-parameters
-n_iterations = 1000
+n_iterations = 300
 learning_rate = 0.001
 dropout = False
 softmax = False
@@ -136,8 +136,8 @@ for epoch in range(n_iterations):
     print(u"Test Epoch {} Loss : {} Accuracy : {}".format(epoch, float(loss.data), success / total))
     test_losses[epoch] = float(loss.data)
     test_accuracies[epoch] = success / total
-    if (success / total) > max_test_accuracy:
-        max_test_accuracy = success / total
+    if test_accuracies[epoch] > max_test_accuracy:
+        max_test_accuracy = test_accuracies[epoch]
     # end if
 # end for
 
